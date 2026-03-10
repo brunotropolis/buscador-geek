@@ -37,26 +37,44 @@
 
     /* ── Header ── */
     header { text-align: center; margin-bottom: 32px; }
-    .logo {
-      font-size: 2.5rem; line-height: 1; margin-bottom: 10px;
-      filter: drop-shadow(0 0 12px var(--accent));
-    }
+    .logo { font-size: 2.5rem; line-height: 1; margin-bottom: 10px; filter: drop-shadow(0 0 12px var(--accent)); }
     header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
     header h1 span { color: var(--accent); }
     header p { color: var(--muted); font-size: 0.875rem; margin-top: 4px; }
 
     /* ── Card ── */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px 28px 32px;
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0 0 32px; overflow: hidden; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
     }
+    .tab-btn {
+      flex: 1;
+      padding: 14px 12px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: color .15s, background .15s;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--text); background: rgba(255,255,255,.03); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-btn .tab-icon { font-size: 1rem; }
 
     /* ── Form fields ── */
+    .form-body { padding: 0 28px; }
     .field { margin-bottom: 18px; }
-    .field:last-of-type { margin-bottom: 24px; }
-
     label {
       display: block;
       font-size: 0.8125rem;
@@ -79,261 +97,214 @@
       transition: border-color .15s, box-shadow .15s;
       outline: none;
     }
-    input[type="url"]:focus,
-    textarea:focus {
+    input[type="url"]:focus, textarea:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.12);
     }
-    input[type="url"]::placeholder,
-    textarea::placeholder { color: #3d444d; }
-
+    input[type="url"]::placeholder, textarea::placeholder { color: #3d444d; }
     textarea { resize: vertical; min-height: 90px; line-height: 1.5; font-family: inherit; }
 
     /* ── Platform badge ── */
-    .plat-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      min-height: 20px;
-      transition: color .2s;
-    }
+    .plat-badge { display: flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 0.8rem; color: var(--muted); min-height: 20px; transition: color .2s; }
     .plat-badge.detected { color: var(--accent); }
     .plat-badge.unknown  { color: var(--priority); }
-    .plat-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-      opacity: .6;
-    }
+    .plat-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: .6; }
     .plat-badge.detected .plat-dot { opacity: 1; }
 
-    /* ── Prioridade toggle ── */
-    .tipo-group {
-      display: flex;
-      gap: 8px;
-    }
-    .tipo-option {
-      flex: 1;
+    /* ── Upload area ── */
+    .upload-area {
       position: relative;
-    }
-    .tipo-option input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0; height: 0;
-    }
-    .tipo-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
+      border: 2px dashed var(--border);
       border-radius: 7px;
       background: var(--input-bg);
+      transition: border-color .15s, background .15s;
       cursor: pointer;
-      font-size: 0.875rem;
-      color: var(--muted);
+      overflow: hidden;
+    }
+    .upload-area:hover, .upload-area.drag-over {
+      border-color: var(--accent);
+      background: rgba(0, 229, 160, 0.04);
+    }
+    .upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 24px 16px;
+      pointer-events: none;
+    }
+    .upload-icon { font-size: 2rem; }
+    .upload-placeholder span { font-size: 0.875rem; color: var(--muted); }
+    .upload-placeholder small { font-size: 0.75rem; color: #3d444d; }
+
+    .upload-preview {
+      position: relative;
+      display: none;
+    }
+    .upload-preview img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      background: #0a0e14;
+      display: block;
+    }
+    .remove-img {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(0,0,0,.7);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .remove-img:hover { background: rgba(248,81,73,.3); }
+
+    /* ── Tipo toggle ── */
+    .tipo-group { display: flex; gap: 8px; }
+    .tipo-option { flex: 1; position: relative; }
+    .tipo-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .tipo-label {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 12px;
+      border: 1px solid var(--border); border-radius: 7px;
+      background: var(--input-bg); cursor: pointer;
+      font-size: 0.875rem; color: var(--muted);
       transition: border-color .15s, color .15s, background .15s;
       user-select: none;
     }
     .tipo-label:hover { border-color: var(--accent); color: var(--text); }
-
     .tipo-option input[type="radio"]:checked + .tipo-label {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(0, 229, 160, 0.06);
+      border-color: var(--accent); color: var(--accent); background: rgba(0, 229, 160, 0.06);
     }
     .tipo-option.priority input[type="radio"]:checked + .tipo-label {
-      border-color: var(--priority);
-      color: var(--priority);
-      background: rgba(245, 158, 11, 0.08);
+      border-color: var(--priority); color: var(--priority); background: rgba(245, 158, 11, 0.08);
     }
     .tipo-icon { font-size: 1rem; }
 
-    /* ── Canal toggle ── */
+    /* ── Canal ── */
     .canal-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 12px;
       padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      background: var(--input-bg);
-      cursor: pointer;
-      transition: border-color .15s;
-      user-select: none;
+      border: 1px solid var(--border); border-radius: 7px;
+      background: var(--input-bg); cursor: pointer;
+      transition: border-color .15s; user-select: none;
     }
     .canal-row:hover { border-color: var(--accent); }
-    .canal-row input[type="checkbox"] {
-      width: 18px; height: 18px;
-      accent-color: var(--accent);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
+    .canal-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
     .canal-row span { font-size: 0.9375rem; color: var(--text); }
     .canal-row small { color: var(--muted); font-size: 0.75rem; margin-left: auto; }
 
-    /* ── Textarea wrapper + emoji btn ── */
+    /* ── Textarea + emoji ── */
     .textarea-wrap { position: relative; }
     .emoji-btn {
-      position: absolute;
-      top: 8px; right: 8px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.15rem;
-      opacity: .5;
+      position: absolute; top: 8px; right: 8px;
+      background: none; border: none; cursor: pointer;
+      font-size: 1.15rem; opacity: .5;
       transition: opacity .15s, transform .15s;
-      padding: 2px 4px;
-      border-radius: 4px;
-      line-height: 1;
+      padding: 2px 4px; border-radius: 4px; line-height: 1;
     }
     .emoji-btn:hover { opacity: 1; transform: scale(1.15); }
-
-    /* ── Emoji picker ── */
     .emoji-picker {
-      position: absolute;
-      top: 36px; right: 0;
-      z-index: 100;
-      background: #1c2128;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      width: 280px;
-      box-shadow: 0 8px 32px rgba(0,0,0,.5);
-      display: none;
+      position: absolute; top: 36px; right: 0; z-index: 100;
+      background: #1c2128; border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px; width: 280px; box-shadow: 0 8px 32px rgba(0,0,0,.5); display: none;
     }
     .emoji-picker.open { display: block; }
-
-    .ep-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 10px;
-    }
+    .ep-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
     .ep-tab {
-      flex: 1;
-      background: none;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      color: var(--muted);
-      font-size: 0.75rem;
-      padding: 4px 6px;
-      cursor: pointer;
+      flex: 1; background: none; border: 1px solid transparent; border-radius: 6px;
+      color: var(--muted); font-size: 0.75rem; padding: 4px 6px; cursor: pointer;
       transition: border-color .1s, color .1s;
     }
-    .ep-tab.active {
-      border-color: var(--border);
-      color: var(--text);
-      background: var(--bg);
-    }
-
-    .ep-grid {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 4px;
-    }
+    .ep-tab.active { border-color: var(--border); color: var(--text); background: var(--bg); }
+    .ep-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
     .ep-emoji {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.25rem;
-      padding: 4px;
-      border-radius: 5px;
-      transition: background .1s;
-      text-align: center;
-      line-height: 1;
+      background: none; border: none; cursor: pointer; font-size: 1.25rem;
+      padding: 4px; border-radius: 5px; transition: background .1s; text-align: center; line-height: 1;
     }
     .ep-emoji:hover { background: rgba(255,255,255,.08); }
 
-    /* ── Submit button ── */
+    /* ── Divider ── */
+    .divider {
+      height: 1px; background: var(--border);
+      margin: 20px 0 20px;
+    }
+
+    /* ── Submit ── */
     .btn {
-      width: 100%;
-      padding: 12px 24px;
-      background: var(--accent);
-      color: #0d1117;
-      font-size: 0.9375rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      width: 100%; padding: 12px 24px;
+      background: var(--accent); color: #0d1117;
+      font-size: 0.9375rem; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
       transition: opacity .15s, transform .1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn:hover:not(:disabled) { opacity: .88; }
     .btn:active:not(:disabled) { transform: scale(.98); }
     .btn:disabled { opacity: .5; cursor: not-allowed; }
-
     .spinner {
       width: 16px; height: 16px;
-      border: 2px solid rgba(0,0,0,.3);
-      border-top-color: #0d1117;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      display: none;
+      border: 2px solid rgba(0,0,0,.3); border-top-color: #0d1117;
+      border-radius: 50%; animation: spin .7s linear infinite; display: none;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .btn.loading .btn-label { opacity: .7; }
     .btn.loading .spinner { display: block; }
 
-    /* ── Error banner ── */
+    /* ── Error / Success ── */
     .error-msg {
-      background: rgba(248, 81, 73, .1);
-      border: 1px solid rgba(248, 81, 73, .3);
-      border-radius: 7px;
-      color: var(--error);
-      font-size: 0.8125rem;
-      padding: 10px 14px;
-      margin-bottom: 16px;
-      display: none;
+      background: rgba(248, 81, 73, .1); border: 1px solid rgba(248, 81, 73, .3);
+      border-radius: 7px; color: var(--error); font-size: 0.8125rem;
+      padding: 10px 14px; margin-bottom: 16px; display: none;
     }
     .error-msg.show { display: block; }
-
-    /* ── Success screen ── */
-    .success-screen { text-align: center; padding: 8px 0; display: none; }
+    .success-screen { text-align: center; padding: 28px 28px 8px; display: none; }
     .success-screen.show { display: block; }
-    .success-icon {
-      font-size: 3rem; margin-bottom: 14px;
-      filter: drop-shadow(0 0 16px var(--success));
-    }
+    .success-icon { font-size: 3rem; margin-bottom: 14px; filter: drop-shadow(0 0 16px var(--success)); }
     .success-screen h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
     .success-screen p { color: var(--muted); font-size: 0.875rem; margin-bottom: 24px; }
     .success-screen .priority-note {
       display: inline-block;
-      background: rgba(245,158,11,.12);
-      border: 1px solid rgba(245,158,11,.3);
-      color: var(--priority);
-      font-size: 0.8rem;
-      padding: 5px 12px;
-      border-radius: 20px;
-      margin-bottom: 20px;
+      background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.3);
+      color: var(--priority); font-size: 0.8rem;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 20px;
     }
-
     .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.875rem;
-      padding: 9px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: border-color .15s;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text); font-size: 0.875rem; padding: 9px 20px;
+      border-radius: 8px; cursor: pointer; transition: border-color .15s;
     }
     .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      color: #3d444d;
-      font-size: 0.75rem;
+    /* ── Processing indicator ── */
+    .processing-msg {
+      background: rgba(0, 229, 160, 0.07);
+      border: 1px solid rgba(0, 229, 160, 0.2);
+      border-radius: 7px;
+      color: var(--accent);
+      font-size: 0.8125rem;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 8px;
     }
+    .processing-msg.show { display: flex; }
+    .processing-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    footer { text-align: center; margin-top: 20px; color: #3d444d; font-size: 0.75rem; }
   </style>
 </head>
 <body>
@@ -356,69 +327,115 @@
 
       <!-- Formulário -->
       <form id="form" novalidate>
-        <div class="error-msg" id="error-msg"></div>
+        <!-- Tabs -->
+        <div class="tabs">
+          <button type="button" class="tab-btn active" id="tab-agente" onclick="switchTab('agente')">
+            <span class="tab-icon">🤖</span> Agente IA
+          </button>
+          <button type="button" class="tab-btn" id="tab-imagem" onclick="switchTab('imagem')">
+            <span class="tab-icon">📸</span> Imagem
+          </button>
+        </div>
 
-        <!-- Link com auto-detecção -->
-        <div class="field">
-          <label for="link">Link do Afiliado <span class="req">*</span></label>
-          <input type="url" id="link" placeholder="https://meli.la/... ou amzn.to/..." autocomplete="off" />
-          <div class="plat-badge" id="plat-badge">
-            <span class="plat-dot"></span>
-            <span id="plat-text">Cole o link para detectar a plataforma</span>
+        <div class="form-body">
+          <div class="error-msg" id="error-msg"></div>
+          <div class="processing-msg" id="processing-msg">
+            <span class="processing-dot"></span>
+            <span id="processing-text">Analisando print com IA...</span>
           </div>
-        </div>
 
-        <!-- Tipo: Normal | Prioridade -->
-        <div class="field">
-          <label>Tipo de postagem</label>
-          <div class="tipo-group">
-            <div class="tipo-option">
-              <input type="radio" name="tipo" id="tipo-normal" value="normal" checked />
-              <label class="tipo-label" for="tipo-normal">
-                <span class="tipo-icon">📋</span> Normal
-              </label>
-            </div>
-            <div class="tipo-option priority">
-              <input type="radio" name="tipo" id="tipo-prioridade" value="prioridade" />
-              <label class="tipo-label" for="tipo-prioridade">
-                <span class="tipo-icon">⚡</span> Prioridade
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Canal WhatsApp -->
-        <div class="field">
-          <label>Canal do WhatsApp</label>
-          <label class="canal-row" for="canal">
-            <input type="checkbox" id="canal" />
-            <span>Enviar também para o canal</span>
-            <small>opcional</small>
-          </label>
-        </div>
-
-        <!-- Texto adicional com emoji picker -->
-        <div class="field">
-          <label for="extra">Texto Adicional</label>
-          <div class="textarea-wrap">
-            <textarea id="extra" placeholder="Frete grátis, cupom, observação..."></textarea>
-            <button type="button" class="emoji-btn" id="emoji-btn" title="Inserir emoji">😊</button>
-            <div class="emoji-picker" id="emoji-picker">
-              <div class="ep-tabs">
-                <button type="button" class="ep-tab active" data-cat="promo">Promo</button>
-                <button type="button" class="ep-tab" data-cat="setas">Setas</button>
-                <button type="button" class="ep-tab" data-cat="rostos">Rostos</button>
-                <button type="button" class="ep-tab" data-cat="outros">Outros</button>
+          <!-- ── Tab AGENTE IA ── -->
+          <div id="pane-agente">
+            <div class="field">
+              <label for="link-agente">Link do Afiliado <span class="req">*</span></label>
+              <input type="url" id="link-agente" placeholder="https://meli.la/... ou amzn.to/..." autocomplete="off" />
+              <div class="plat-badge" id="plat-badge-agente">
+                <span class="plat-dot"></span>
+                <span id="plat-text-agente">Cole o link para detectar a plataforma</span>
               </div>
-              <div class="ep-grid" id="ep-grid"></div>
             </div>
           </div>
-        </div>
 
-        <button type="submit" class="btn" id="btn-submit">
-          <div class="spinner"></div>
-          <span class="btn-label" id="btn-label">Adicionar Oferta →</span>
-        </button>
+          <!-- ── Tab IMAGEM ── -->
+          <div id="pane-imagem" style="display:none">
+            <div class="field">
+              <label>Print da Oferta <span class="req">*</span></label>
+              <div class="upload-area" id="upload-area">
+                <input type="file" id="image-input" accept="image/*" />
+                <div class="upload-placeholder" id="upload-placeholder">
+                  <span class="upload-icon">📸</span>
+                  <span>Clique ou arraste a print aqui</span>
+                  <small>JPG, PNG, WEBP</small>
+                </div>
+                <div class="upload-preview" id="upload-preview">
+                  <img id="preview-img" alt="preview" />
+                  <button type="button" class="remove-img" id="remove-img" onclick="clearImage(event)">✕</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="link-imagem">Link do Afiliado <span class="req">*</span></label>
+              <input type="url" id="link-imagem" placeholder="https://amzn.to/... ou meli.la/..." autocomplete="off" />
+              <div class="plat-badge" id="plat-badge-imagem">
+                <span class="plat-dot"></span>
+                <span id="plat-text-imagem">Cole o link para detectar a plataforma</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Campos comuns ── -->
+          <div class="divider"></div>
+
+          <div class="field">
+            <label>Tipo de postagem</label>
+            <div class="tipo-group">
+              <div class="tipo-option">
+                <input type="radio" name="tipo" id="tipo-normal" value="normal" checked />
+                <label class="tipo-label" for="tipo-normal">
+                  <span class="tipo-icon">📋</span> Normal
+                </label>
+              </div>
+              <div class="tipo-option priority">
+                <input type="radio" name="tipo" id="tipo-prioridade" value="prioridade" />
+                <label class="tipo-label" for="tipo-prioridade">
+                  <span class="tipo-icon">⚡</span> Prioridade
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Canal do WhatsApp</label>
+            <label class="canal-row" for="canal">
+              <input type="checkbox" id="canal" />
+              <span>Enviar também para o canal</span>
+              <small>opcional</small>
+            </label>
+          </div>
+
+          <div class="field" style="margin-bottom:24px">
+            <label for="extra">Texto Adicional</label>
+            <div class="textarea-wrap">
+              <textarea id="extra" placeholder="Frete grátis, cupom, observação..."></textarea>
+              <button type="button" class="emoji-btn" id="emoji-btn" title="Inserir emoji">😊</button>
+              <div class="emoji-picker" id="emoji-picker">
+                <div class="ep-tabs">
+                  <button type="button" class="ep-tab active" data-cat="promo">Promo</button>
+                  <button type="button" class="ep-tab" data-cat="setas">Setas</button>
+                  <button type="button" class="ep-tab" data-cat="rostos">Rostos</button>
+                  <button type="button" class="ep-tab" data-cat="outros">Outros</button>
+                </div>
+                <div class="ep-grid" id="ep-grid"></div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn" id="btn-submit">
+            <div class="spinner"></div>
+            <span class="btn-label" id="btn-label">Adicionar Oferta →</span>
+          </button>
+        </div>
       </form>
     </div>
 
@@ -426,17 +443,54 @@
   </div>
 
   <script>
-    const WEBHOOK = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-api';
+    const WEBHOOK_AGENTE = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-api';
+    const WEBHOOK_IMAGEM = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-imagem';
 
-    /* ── Emojis por categoria ── */
+    /* ── Emoji picker ── */
     const EMOJIS = {
       promo:  ['🔥','⚡','💥','🎯','🏷️','💰','💸','🤑','🛍️','🎁','🆓','💯','🚨','🔔','⏰','🕐'],
       setas:  ['👇','👆','👉','👈','➡️','⬇️','✅','❌','⭕','🔴','🟢','🟡','🔵','⚪','🔺','🔻'],
       rostos: ['😍','🤩','😱','🥳','😎','🤯','🙌','👏','💪','🫶','❤️','🧡','💛','💚','💙','💜'],
       outros: ['📦','🎉','🏆','👑','🌟','⭐','✨','🎊','🪙','💎','🔑','🧩','📱','💻','🖥️','🎮'],
     };
+    let currentCat = 'promo';
+    const epGrid = document.getElementById('ep-grid');
 
-    /* ── Detecção de plataforma ── */
+    function renderEmojis(cat) {
+      currentCat = cat;
+      epGrid.innerHTML = EMOJIS[cat].map(e => `<button type="button" class="ep-emoji" data-emoji="${e}">${e}</button>`).join('');
+    }
+    renderEmojis('promo');
+
+    document.getElementById('emoji-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('emoji-picker').classList.toggle('open');
+    });
+    document.querySelectorAll('.ep-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.ep-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderEmojis(tab.dataset.cat);
+      });
+    });
+    epGrid.addEventListener('click', e => {
+      const btn = e.target.closest('.ep-emoji');
+      if (!btn) return;
+      const emoji = btn.dataset.emoji;
+      const ta = document.getElementById('extra');
+      const s = ta.selectionStart, end = ta.selectionEnd;
+      ta.value = ta.value.slice(0, s) + emoji + ta.value.slice(end);
+      ta.selectionStart = ta.selectionEnd = s + emoji.length;
+      ta.focus();
+    });
+    document.addEventListener('click', e => {
+      const picker = document.getElementById('emoji-picker');
+      if (!picker.contains(e.target) && e.target !== document.getElementById('emoji-btn')) {
+        picker.classList.remove('open');
+      }
+    });
+
+    /* ── Platform detection ── */
     function detectPlatform(url) {
       if (!url) return null;
       const u = url.toLowerCase();
@@ -445,161 +499,221 @@
       if (u.includes('shopee.com.br') || u.includes('shope.ee')) return 'Shopee';
       return null;
     }
-
     const PLAT_NAMES = { ML: '✓ Mercado Livre detectado', Amazon: '✓ Amazon detectada', Shopee: '✓ Shopee detectada' };
+    let detectedPlatAgente = null;
+    let detectedPlatImagem = null;
 
-    /* ── Atualiza badge de plataforma ── */
-    const platBadge = document.getElementById('plat-badge');
-    const platText  = document.getElementById('plat-text');
-    let detectedPlat = null;
-
-    function updatePlatBadge(url) {
-      detectedPlat = detectPlatform(url);
-      platBadge.className = 'plat-badge';
-      if (!url) {
-        platText.textContent = 'Cole o link para detectar a plataforma';
-      } else if (detectedPlat) {
-        platBadge.classList.add('detected');
-        platText.textContent = PLAT_NAMES[detectedPlat];
-      } else {
-        platBadge.classList.add('unknown');
-        platText.textContent = '⚠ Plataforma não reconhecida — verifique o link';
-      }
+    function updatePlatBadge(url, badgeId, textId, which) {
+      const plat = detectPlatform(url);
+      if (which === 'agente') detectedPlatAgente = plat;
+      else detectedPlatImagem = plat;
+      const badge = document.getElementById(badgeId);
+      const text  = document.getElementById(textId);
+      badge.className = 'plat-badge';
+      if (!url) { text.textContent = 'Cole o link para detectar a plataforma'; return; }
+      if (plat) { badge.classList.add('detected'); text.textContent = PLAT_NAMES[plat]; }
+      else       { badge.classList.add('unknown');  text.textContent = '⚠ Plataforma não reconhecida — verifique o link'; }
     }
 
-    document.getElementById('link').addEventListener('input', e => updatePlatBadge(e.target.value.trim()));
-    document.getElementById('link').addEventListener('paste', e => {
-      setTimeout(() => updatePlatBadge(e.target.value.trim()), 10);
+    function hookPlatBadge(inputId, badgeId, textId, which) {
+      const el = document.getElementById(inputId);
+      el.addEventListener('input',  () => updatePlatBadge(el.value.trim(), badgeId, textId, which));
+      el.addEventListener('paste',  () => setTimeout(() => updatePlatBadge(el.value.trim(), badgeId, textId, which), 10));
+    }
+    hookPlatBadge('link-agente', 'plat-badge-agente', 'plat-text-agente', 'agente');
+    hookPlatBadge('link-imagem', 'plat-badge-imagem', 'plat-text-imagem', 'imagem');
+
+    /* ── Tab switching ── */
+    let activeTab = 'agente';
+
+    function switchTab(tab) {
+      activeTab = tab;
+      document.getElementById('pane-agente').style.display = tab === 'agente' ? '' : 'none';
+      document.getElementById('pane-imagem').style.display = tab === 'imagem' ? '' : 'none';
+      document.getElementById('tab-agente').classList.toggle('active', tab === 'agente');
+      document.getElementById('tab-imagem').classList.toggle('active', tab === 'imagem');
+      document.getElementById('error-msg').classList.remove('show');
+    }
+
+    /* ── Image upload ── */
+    let imageBase64 = null;
+    let imageMediaType = null;
+
+    const uploadArea = document.getElementById('upload-area');
+    const imageInput = document.getElementById('image-input');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    const uploadPreview    = document.getElementById('upload-preview');
+    const previewImg       = document.getElementById('preview-img');
+
+    imageInput.addEventListener('change', e => {
+      if (e.target.files[0]) handleImageFile(e.target.files[0]);
     });
 
-    /* ── Emoji picker ── */
-    const emojiBtn    = document.getElementById('emoji-btn');
-    const emojiPicker = document.getElementById('emoji-picker');
-    const epGrid      = document.getElementById('ep-grid');
-    let currentCat    = 'promo';
+    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+    uploadArea.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]);
+    });
 
-    function renderEmojis(cat) {
-      currentCat = cat;
-      epGrid.innerHTML = EMOJIS[cat].map(e =>
-        `<button type="button" class="ep-emoji" data-emoji="${e}">${e}</button>`
-      ).join('');
+    function handleImageFile(file) {
+      if (!file.type.startsWith('image/')) return;
+      // Comprimir via canvas (max 1000px, JPEG 82%)
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1000;
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else       { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          imageBase64    = dataUrl.split(',')[1];
+          imageMediaType = 'image/jpeg';
+          previewImg.src = dataUrl;
+          uploadPlaceholder.style.display = 'none';
+          uploadPreview.style.display = 'block';
+          // Disable file input click while preview is shown
+          imageInput.style.pointerEvents = 'none';
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
-    renderEmojis('promo');
-
-    emojiBtn.addEventListener('click', e => {
+    function clearImage(e) {
       e.stopPropagation();
-      emojiPicker.classList.toggle('open');
-    });
-
-    document.querySelectorAll('.ep-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.ep-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        renderEmojis(tab.dataset.cat);
-      });
-    });
-
-    epGrid.addEventListener('click', e => {
-      const btn = e.target.closest('.ep-emoji');
-      if (!btn) return;
-      const emoji = btn.dataset.emoji;
-      const ta    = document.getElementById('extra');
-      const start = ta.selectionStart;
-      const end   = ta.selectionEnd;
-      ta.value = ta.value.slice(0, start) + emoji + ta.value.slice(end);
-      ta.selectionStart = ta.selectionEnd = start + emoji.length;
-      ta.focus();
-    });
-
-    document.addEventListener('click', e => {
-      if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
-        emojiPicker.classList.remove('open');
-      }
-    });
+      imageBase64 = null; imageMediaType = null;
+      imageInput.value = '';
+      previewImg.src = '';
+      uploadPlaceholder.style.display = 'flex';
+      uploadPreview.style.display = 'none';
+      imageInput.style.pointerEvents = '';
+    }
 
     /* ── Form submit ── */
     const form      = document.getElementById('form');
     const btnSubmit = document.getElementById('btn-submit');
     const btnLabel  = document.getElementById('btn-label');
     const errorMsg  = document.getElementById('error-msg');
+    const processingMsg = document.getElementById('processing-msg');
     const success   = document.getElementById('success');
 
     function showError(msg) {
       errorMsg.textContent = msg;
       errorMsg.classList.add('show');
+      processingMsg.classList.remove('show');
       btnSubmit.disabled = false;
       btnSubmit.classList.remove('loading');
       btnLabel.textContent = 'Adicionar Oferta →';
     }
 
-    function setLoading(on) {
+    function setLoading(on, processingText) {
       btnSubmit.disabled = on;
       btnSubmit.classList.toggle('loading', on);
       btnLabel.textContent = on ? 'Enviando...' : 'Adicionar Oferta →';
+      if (on && processingText) {
+        document.getElementById('processing-text').textContent = processingText;
+        processingMsg.classList.add('show');
+      } else {
+        processingMsg.classList.remove('show');
+      }
     }
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
       errorMsg.classList.remove('show');
-      emojiPicker.classList.remove('open');
+      document.getElementById('emoji-picker').classList.remove('open');
 
-      const link  = document.getElementById('link').value.trim();
       const canal = document.getElementById('canal').checked ? 'SIM' : '';
       const extra = document.getElementById('extra').value.trim();
       const tipo  = document.querySelector('input[name="tipo"]:checked').value;
+      const isPrio = tipo === 'prioridade';
 
-      if (!link) return showError('Informe o link do afiliado.');
-      if (!detectedPlat) return showError('Plataforma não reconhecida. Verifique o link.');
+      if (activeTab === 'agente') {
+        // ── AGENTE IA ──
+        const link = document.getElementById('link-agente').value.trim();
+        if (!link) return showError('Informe o link do afiliado.');
+        if (!detectedPlatAgente) return showError('Plataforma não reconhecida. Verifique o link.');
 
-      setLoading(true);
+        setLoading(true);
+        try {
+          const res = await fetch(WEBHOOK_AGENTE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ link_afiliado: link, plataforma: detectedPlatAgente, canal, extra_texto: extra, prioridade: isPrio ? 'SIM' : '' })
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
+          showSuccess(isPrio, detectedPlatAgente, 'agente');
+        } catch (err) {
+          showError(err.message || 'Erro de conexão. Tente novamente.');
+        }
 
-      try {
-        const payload = {
-          link_afiliado: link,
-          plataforma: detectedPlat,
-          canal,
-          extra_texto: extra,
-          prioridade: tipo === 'prioridade' ? 'SIM' : ''
-        };
+      } else {
+        // ── IMAGEM ──
+        const link = document.getElementById('link-imagem').value.trim();
+        if (!imageBase64) return showError('Faça upload da print da oferta.');
+        if (!link) return showError('Informe o link do afiliado.');
+        if (!detectedPlatImagem) return showError('Plataforma não reconhecida. Verifique o link.');
 
-        const res  = await fetch(WEBHOOK, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
-
-        // Tela de sucesso
-        const isPrio = tipo === 'prioridade';
-        document.getElementById('success-icon').textContent   = isPrio ? '⚡' : '✅';
-        document.getElementById('success-title').textContent  = isPrio ? 'Oferta prioritária adicionada!' : 'Oferta adicionada!';
-        document.getElementById('success-msg').textContent    = isPrio
-          ? `${detectedPlat} · será postada em até 5 minutos.`
-          : `${detectedPlat} · será postada no próximo ciclo.`;
-        document.getElementById('priority-note').style.display = isPrio ? 'inline-block' : 'none';
-
-        form.style.display = 'none';
-        success.classList.add('show');
-
-      } catch (err) {
-        showError(err.message || 'Erro de conexão. Tente novamente.');
+        setLoading(true, 'Analisando print com IA...');
+        try {
+          const res = await fetch(WEBHOOK_IMAGEM, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              image_base64: imageBase64,
+              image_media_type: imageMediaType,
+              link_afiliado: link,
+              plataforma: detectedPlatImagem,
+              canal,
+              extra_texto: extra,
+              prioridade: isPrio ? 'SIM' : ''
+            })
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
+          showSuccess(isPrio, detectedPlatImagem, 'imagem');
+        } catch (err) {
+          showError(err.message || 'Erro de conexão. Tente novamente.');
+        }
       }
     });
+
+    function showSuccess(isPrio, plat, mode) {
+      setLoading(false);
+      const modeLabel = mode === 'imagem' ? '📸 ' : '';
+      document.getElementById('success-icon').textContent   = isPrio ? '⚡' : '✅';
+      document.getElementById('success-title').textContent  = isPrio ? 'Oferta prioritária adicionada!' : 'Oferta adicionada!';
+      document.getElementById('success-msg').textContent    = isPrio
+        ? `${modeLabel}${plat} · será postada em até 5 minutos.`
+        : `${modeLabel}${plat} · será postada no próximo ciclo.`;
+      document.getElementById('priority-note').style.display = isPrio ? 'inline-block' : 'none';
+      form.style.display = 'none';
+      success.classList.add('show');
+    }
 
     function resetForm() {
       form.reset();
       form.style.display = '';
       success.classList.remove('show');
       errorMsg.classList.remove('show');
+      processingMsg.classList.remove('show');
       btnSubmit.disabled = false;
       btnSubmit.classList.remove('loading');
       btnLabel.textContent = 'Adicionar Oferta →';
-      detectedPlat = null;
-      updatePlatBadge('');
-      document.getElementById('link').focus();
+      detectedPlatAgente = null; detectedPlatImagem = null;
+      updatePlatBadge('', 'plat-badge-agente', 'plat-text-agente', 'agente');
+      updatePlatBadge('', 'plat-badge-imagem', 'plat-text-imagem', 'imagem');
+      clearImage({ stopPropagation: () => {} });
+      document.getElementById('link-agente').focus();
     }
   </script>
 </body>
