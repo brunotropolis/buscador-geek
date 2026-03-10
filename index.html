@@ -13,6 +13,7 @@
       --border:    #30363d;
       --accent:    #00e5a0;
       --accent2:   #7c3aed;
+      --priority:  #f59e0b;
       --text:      #e6edf3;
       --muted:     #8b949e;
       --error:     #f85149;
@@ -32,33 +33,17 @@
       padding: 24px 16px;
     }
 
-    .wrap {
-      width: 100%;
-      max-width: 480px;
-    }
+    .wrap { width: 100%; max-width: 480px; }
 
     /* ── Header ── */
-    header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
+    header { text-align: center; margin-bottom: 32px; }
     .logo {
-      font-size: 2.5rem;
-      line-height: 1;
-      margin-bottom: 10px;
+      font-size: 2.5rem; line-height: 1; margin-bottom: 10px;
       filter: drop-shadow(0 0 12px var(--accent));
     }
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
+    header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
     header h1 span { color: var(--accent); }
-    header p {
-      color: var(--muted);
-      font-size: 0.875rem;
-      margin-top: 4px;
-    }
+    header p { color: var(--muted); font-size: 0.875rem; margin-top: 4px; }
 
     /* ── Card ── */
     .card {
@@ -83,7 +68,6 @@
     .req { color: var(--accent); margin-left: 2px; }
 
     input[type="url"],
-    select,
     textarea {
       width: 100%;
       background: var(--input-bg);
@@ -94,10 +78,8 @@
       padding: 10px 14px;
       transition: border-color .15s, box-shadow .15s;
       outline: none;
-      appearance: none;
     }
     input[type="url"]:focus,
-    select:focus,
     textarea:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.12);
@@ -105,16 +87,72 @@
     input[type="url"]::placeholder,
     textarea::placeholder { color: #3d444d; }
 
-    select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-      cursor: pointer;
-    }
-    select option { background: #1c2128; }
-
     textarea { resize: vertical; min-height: 90px; line-height: 1.5; font-family: inherit; }
+
+    /* ── Platform badge ── */
+    .plat-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      min-height: 20px;
+      transition: color .2s;
+    }
+    .plat-badge.detected { color: var(--accent); }
+    .plat-badge.unknown  { color: var(--priority); }
+    .plat-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+      opacity: .6;
+    }
+    .plat-badge.detected .plat-dot { opacity: 1; }
+
+    /* ── Prioridade toggle ── */
+    .tipo-group {
+      display: flex;
+      gap: 8px;
+    }
+    .tipo-option {
+      flex: 1;
+      position: relative;
+    }
+    .tipo-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+    .tipo-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--input-bg);
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--muted);
+      transition: border-color .15s, color .15s, background .15s;
+      user-select: none;
+    }
+    .tipo-label:hover { border-color: var(--accent); color: var(--text); }
+
+    .tipo-option input[type="radio"]:checked + .tipo-label {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0, 229, 160, 0.06);
+    }
+    .tipo-option.priority input[type="radio"]:checked + .tipo-label {
+      border-color: var(--priority);
+      color: var(--priority);
+      background: rgba(245, 158, 11, 0.08);
+    }
+    .tipo-icon { font-size: 1rem; }
 
     /* ── Canal toggle ── */
     .canal-row {
@@ -136,15 +174,80 @@
       cursor: pointer;
       flex-shrink: 0;
     }
-    .canal-row span {
-      font-size: 0.9375rem;
-      color: var(--text);
+    .canal-row span { font-size: 0.9375rem; color: var(--text); }
+    .canal-row small { color: var(--muted); font-size: 0.75rem; margin-left: auto; }
+
+    /* ── Textarea wrapper + emoji btn ── */
+    .textarea-wrap { position: relative; }
+    .emoji-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.15rem;
+      opacity: .5;
+      transition: opacity .15s, transform .15s;
+      padding: 2px 4px;
+      border-radius: 4px;
+      line-height: 1;
     }
-    .canal-row small {
+    .emoji-btn:hover { opacity: 1; transform: scale(1.15); }
+
+    /* ── Emoji picker ── */
+    .emoji-picker {
+      position: absolute;
+      top: 36px; right: 0;
+      z-index: 100;
+      background: #1c2128;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      width: 280px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      display: none;
+    }
+    .emoji-picker.open { display: block; }
+
+    .ep-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    .ep-tab {
+      flex: 1;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 6px;
       color: var(--muted);
       font-size: 0.75rem;
-      margin-left: auto;
+      padding: 4px 6px;
+      cursor: pointer;
+      transition: border-color .1s, color .1s;
     }
+    .ep-tab.active {
+      border-color: var(--border);
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .ep-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+    }
+    .ep-emoji {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.25rem;
+      padding: 4px;
+      border-radius: 5px;
+      transition: background .1s;
+      text-align: center;
+      line-height: 1;
+    }
+    .ep-emoji:hover { background: rgba(255,255,255,.08); }
 
     /* ── Submit button ── */
     .btn {
@@ -167,7 +270,6 @@
     .btn:active:not(:disabled) { transform: scale(.98); }
     .btn:disabled { opacity: .5; cursor: not-allowed; }
 
-    /* ── Spinner ── */
     .spinner {
       width: 16px; height: 16px;
       border: 2px solid rgba(0,0,0,.3);
@@ -194,27 +296,25 @@
     .error-msg.show { display: block; }
 
     /* ── Success screen ── */
-    .success-screen {
-      text-align: center;
-      padding: 8px 0;
-      display: none;
-    }
+    .success-screen { text-align: center; padding: 8px 0; display: none; }
     .success-screen.show { display: block; }
     .success-icon {
-      font-size: 3rem;
-      margin-bottom: 14px;
+      font-size: 3rem; margin-bottom: 14px;
       filter: drop-shadow(0 0 16px var(--success));
     }
-    .success-screen h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 8px;
+    .success-screen h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+    .success-screen p { color: var(--muted); font-size: 0.875rem; margin-bottom: 24px; }
+    .success-screen .priority-note {
+      display: inline-block;
+      background: rgba(245,158,11,.12);
+      border: 1px solid rgba(245,158,11,.3);
+      color: var(--priority);
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
     }
-    .success-screen p {
-      color: var(--muted);
-      font-size: 0.875rem;
-      margin-bottom: 24px;
-    }
+
     .btn-ghost {
       background: transparent;
       border: 1px solid var(--border);
@@ -247,9 +347,10 @@
     <div class="card">
       <!-- Tela de sucesso -->
       <div class="success-screen" id="success">
-        <div class="success-icon">✅</div>
-        <h2>Oferta adicionada!</h2>
-        <p>A oferta foi enviada e será programada em breve.</p>
+        <div class="success-icon" id="success-icon">✅</div>
+        <h2 id="success-title">Oferta adicionada!</h2>
+        <p id="success-msg">A oferta foi enviada e será programada em breve.</p>
+        <div class="priority-note" id="priority-note" style="display:none">⚡ Fila de prioridade — postagem em até 5 min</div>
         <button class="btn-ghost" onclick="resetForm()">+ Adicionar outra</button>
       </div>
 
@@ -257,22 +358,36 @@
       <form id="form" novalidate>
         <div class="error-msg" id="error-msg"></div>
 
+        <!-- Link com auto-detecção -->
         <div class="field">
           <label for="link">Link do Afiliado <span class="req">*</span></label>
           <input type="url" id="link" placeholder="https://meli.la/... ou amzn.to/..." autocomplete="off" />
+          <div class="plat-badge" id="plat-badge">
+            <span class="plat-dot"></span>
+            <span id="plat-text">Cole o link para detectar a plataforma</span>
+          </div>
         </div>
 
+        <!-- Tipo: Normal | Prioridade -->
         <div class="field">
-          <label for="plataforma">Plataforma <span class="req">*</span></label>
-          <select id="plataforma">
-            <option value="">Selecione a plataforma...</option>
-            <option value="ML">Mercado Livre</option>
-            <option value="Amazon">Amazon</option>
-            <option value="Shoppe">Shoppe</option>
-            <option value="Awin">Awin</option>
-          </select>
+          <label>Tipo de postagem</label>
+          <div class="tipo-group">
+            <div class="tipo-option">
+              <input type="radio" name="tipo" id="tipo-normal" value="normal" checked />
+              <label class="tipo-label" for="tipo-normal">
+                <span class="tipo-icon">📋</span> Normal
+              </label>
+            </div>
+            <div class="tipo-option priority">
+              <input type="radio" name="tipo" id="tipo-prioridade" value="prioridade" />
+              <label class="tipo-label" for="tipo-prioridade">
+                <span class="tipo-icon">⚡</span> Prioridade
+              </label>
+            </div>
+          </div>
         </div>
 
+        <!-- Canal WhatsApp -->
         <div class="field">
           <label>Canal do WhatsApp</label>
           <label class="canal-row" for="canal">
@@ -282,13 +397,26 @@
           </label>
         </div>
 
+        <!-- Texto adicional com emoji picker -->
         <div class="field">
           <label for="extra">Texto Adicional</label>
-          <textarea id="extra" placeholder="Frete grátis, cupom, observação, emojis..."></textarea>
+          <div class="textarea-wrap">
+            <textarea id="extra" placeholder="Frete grátis, cupom, observação..."></textarea>
+            <button type="button" class="emoji-btn" id="emoji-btn" title="Inserir emoji">😊</button>
+            <div class="emoji-picker" id="emoji-picker">
+              <div class="ep-tabs">
+                <button type="button" class="ep-tab active" data-cat="promo">Promo</button>
+                <button type="button" class="ep-tab" data-cat="setas">Setas</button>
+                <button type="button" class="ep-tab" data-cat="rostos">Rostos</button>
+                <button type="button" class="ep-tab" data-cat="outros">Outros</button>
+              </div>
+              <div class="ep-grid" id="ep-grid"></div>
+            </div>
+          </div>
         </div>
 
         <button type="submit" class="btn" id="btn-submit">
-          <div class="spinner" id="spinner"></div>
+          <div class="spinner"></div>
           <span class="btn-label" id="btn-label">Adicionar Oferta →</span>
         </button>
       </form>
@@ -300,10 +428,100 @@
   <script>
     const WEBHOOK = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-api';
 
+    /* ── Emojis por categoria ── */
+    const EMOJIS = {
+      promo:  ['🔥','⚡','💥','🎯','🏷️','💰','💸','🤑','🛍️','🎁','🆓','💯','🚨','🔔','⏰','🕐'],
+      setas:  ['👇','👆','👉','👈','➡️','⬇️','✅','❌','⭕','🔴','🟢','🟡','🔵','⚪','🔺','🔻'],
+      rostos: ['😍','🤩','😱','🥳','😎','🤯','🙌','👏','💪','🫶','❤️','🧡','💛','💚','💙','💜'],
+      outros: ['📦','🎉','🏆','👑','🌟','⭐','✨','🎊','🪙','💎','🔑','🧩','📱','💻','🖥️','🎮'],
+    };
+
+    /* ── Detecção de plataforma ── */
+    function detectPlatform(url) {
+      if (!url) return null;
+      const u = url.toLowerCase();
+      if (u.includes('meli.la') || u.includes('mercadolivre.com') || u.includes('produto.mercadolivre') || u.includes('ml.com.br')) return 'ML';
+      if (u.includes('amzn.to') || u.includes('amazon.com.br') || u.includes('a.co/')) return 'Amazon';
+      if (u.includes('shopee.com.br') || u.includes('shope.ee')) return 'Shopee';
+      return null;
+    }
+
+    const PLAT_NAMES = { ML: '✓ Mercado Livre detectado', Amazon: '✓ Amazon detectada', Shopee: '✓ Shopee detectada' };
+
+    /* ── Atualiza badge de plataforma ── */
+    const platBadge = document.getElementById('plat-badge');
+    const platText  = document.getElementById('plat-text');
+    let detectedPlat = null;
+
+    function updatePlatBadge(url) {
+      detectedPlat = detectPlatform(url);
+      platBadge.className = 'plat-badge';
+      if (!url) {
+        platText.textContent = 'Cole o link para detectar a plataforma';
+      } else if (detectedPlat) {
+        platBadge.classList.add('detected');
+        platText.textContent = PLAT_NAMES[detectedPlat];
+      } else {
+        platBadge.classList.add('unknown');
+        platText.textContent = '⚠ Plataforma não reconhecida — verifique o link';
+      }
+    }
+
+    document.getElementById('link').addEventListener('input', e => updatePlatBadge(e.target.value.trim()));
+    document.getElementById('link').addEventListener('paste', e => {
+      setTimeout(() => updatePlatBadge(e.target.value.trim()), 10);
+    });
+
+    /* ── Emoji picker ── */
+    const emojiBtn    = document.getElementById('emoji-btn');
+    const emojiPicker = document.getElementById('emoji-picker');
+    const epGrid      = document.getElementById('ep-grid');
+    let currentCat    = 'promo';
+
+    function renderEmojis(cat) {
+      currentCat = cat;
+      epGrid.innerHTML = EMOJIS[cat].map(e =>
+        `<button type="button" class="ep-emoji" data-emoji="${e}">${e}</button>`
+      ).join('');
+    }
+
+    renderEmojis('promo');
+
+    emojiBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      emojiPicker.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.ep-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.ep-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderEmojis(tab.dataset.cat);
+      });
+    });
+
+    epGrid.addEventListener('click', e => {
+      const btn = e.target.closest('.ep-emoji');
+      if (!btn) return;
+      const emoji = btn.dataset.emoji;
+      const ta    = document.getElementById('extra');
+      const start = ta.selectionStart;
+      const end   = ta.selectionEnd;
+      ta.value = ta.value.slice(0, start) + emoji + ta.value.slice(end);
+      ta.selectionStart = ta.selectionEnd = start + emoji.length;
+      ta.focus();
+    });
+
+    document.addEventListener('click', e => {
+      if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+        emojiPicker.classList.remove('open');
+      }
+    });
+
+    /* ── Form submit ── */
     const form      = document.getElementById('form');
     const btnSubmit = document.getElementById('btn-submit');
     const btnLabel  = document.getElementById('btn-label');
-    const spinner   = document.getElementById('spinner');
     const errorMsg  = document.getElementById('error-msg');
     const success   = document.getElementById('success');
 
@@ -321,34 +539,48 @@
       btnLabel.textContent = on ? 'Enviando...' : 'Adicionar Oferta →';
     }
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       errorMsg.classList.remove('show');
+      emojiPicker.classList.remove('open');
 
-      const link      = document.getElementById('link').value.trim();
-      const plataforma = document.getElementById('plataforma').value;
-      const canal     = document.getElementById('canal').checked ? 'SIM' : '';
-      const extra     = document.getElementById('extra').value.trim();
+      const link  = document.getElementById('link').value.trim();
+      const canal = document.getElementById('canal').checked ? 'SIM' : '';
+      const extra = document.getElementById('extra').value.trim();
+      const tipo  = document.querySelector('input[name="tipo"]:checked').value;
 
       if (!link) return showError('Informe o link do afiliado.');
-      if (!plataforma) return showError('Selecione a plataforma.');
+      if (!detectedPlat) return showError('Plataforma não reconhecida. Verifique o link.');
 
       setLoading(true);
 
       try {
-        const res = await fetch(WEBHOOK, {
+        const payload = {
+          link_afiliado: link,
+          plataforma: detectedPlat,
+          canal,
+          extra_texto: extra,
+          prioridade: tipo === 'prioridade' ? 'SIM' : ''
+        };
+
+        const res  = await fetch(WEBHOOK, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ link_afiliado: link, plataforma, canal, extra_texto: extra })
+          body: JSON.stringify(payload)
         });
 
         const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
 
-        if (!res.ok || !data.ok) {
-          throw new Error(data.message || `Erro ${res.status}`);
-        }
+        // Tela de sucesso
+        const isPrio = tipo === 'prioridade';
+        document.getElementById('success-icon').textContent   = isPrio ? '⚡' : '✅';
+        document.getElementById('success-title').textContent  = isPrio ? 'Oferta prioritária adicionada!' : 'Oferta adicionada!';
+        document.getElementById('success-msg').textContent    = isPrio
+          ? `${detectedPlat} · será postada em até 5 minutos.`
+          : `${detectedPlat} · será postada no próximo ciclo.`;
+        document.getElementById('priority-note').style.display = isPrio ? 'inline-block' : 'none';
 
-        // Sucesso
         form.style.display = 'none';
         success.classList.add('show');
 
@@ -365,6 +597,8 @@
       btnSubmit.disabled = false;
       btnSubmit.classList.remove('loading');
       btnLabel.textContent = 'Adicionar Oferta →';
+      detectedPlat = null;
+      updatePlatBadge('');
       document.getElementById('link').focus();
     }
   </script>
