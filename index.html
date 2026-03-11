@@ -392,6 +392,16 @@
     .convert-btn:hover:not(:disabled) { opacity: .85; }
     .convert-btn:disabled { opacity: .5; cursor: not-allowed; }
     .convert-btn.loading { background: var(--muted); }
+    .convert-btn-full {
+      width: 100%;
+      margin-top: 14px;
+      padding: 11px 16px;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
     .convert-status {
       display: flex; align-items: center; gap: 7px;
       margin-top: 6px; font-size: 0.8rem; color: var(--muted);
@@ -482,19 +492,19 @@
 
               <!-- Shopee section (hidden by default) -->
               <div id="shopee-section-agente" class="shopee-section" style="display:none">
-                <div class="shopee-convert-row">
-                  <input type="url" id="converted-link-agente" readonly placeholder="Clique em Converter..." />
-                  <button type="button" class="convert-btn" id="convert-btn-agente">Converter</button>
-                </div>
-                <div class="convert-status" id="convert-status-agente">Cole a URL do produto e clique Converter</div>
-
-                <label class="sub-id-label">Sub IDs <small>(somente letras e números)</small></label>
+                <label class="sub-id-label">Sub IDs <small>(somente letras e números — opcional)</small></label>
                 <div class="sub-id-grid">
-                  <input type="text" id="sub-id-1-agente" placeholder="Sub ID 1" maxlength="100" pattern="[a-zA-Z0-9]*" />
-                  <input type="text" id="sub-id-2-agente" placeholder="Sub ID 2" maxlength="100" pattern="[a-zA-Z0-9]*" />
-                  <input type="text" id="sub-id-3-agente" placeholder="Sub ID 3" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-1-agente" placeholder="Sub ID 1 (ex: nomeDaCampanha)" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-2-agente" placeholder="Sub ID 2 (ex: origemDoTrafego)" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-3-agente" placeholder="Sub ID 3 (ex: tipoDeConteudo)" maxlength="100" pattern="[a-zA-Z0-9]*" />
                   <input type="text" id="sub-id-4-agente" placeholder="Sub ID 4" maxlength="100" pattern="[a-zA-Z0-9]*" />
                   <input type="text" id="sub-id-5-agente" placeholder="Sub ID 5" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                </div>
+
+                <button type="button" class="convert-btn convert-btn-full" id="convert-btn-agente">🔗 Converter Link Shopee</button>
+                <div class="convert-status" id="convert-status-agente">Preencha os Sub IDs (se quiser) e clique em Converter</div>
+                <div class="shopee-convert-row" id="converted-row-agente" style="display:none">
+                  <input type="url" id="converted-link-agente" readonly placeholder="Link convertido aparecerá aqui..." />
                 </div>
               </div>
             </div>
@@ -528,19 +538,19 @@
 
               <!-- Shopee section (hidden by default) -->
               <div id="shopee-section-imagem" class="shopee-section" style="display:none">
-                <div class="shopee-convert-row">
-                  <input type="url" id="converted-link-imagem" readonly placeholder="Clique em Converter..." />
-                  <button type="button" class="convert-btn" id="convert-btn-imagem">Converter</button>
-                </div>
-                <div class="convert-status" id="convert-status-imagem">Cole a URL do produto e clique Converter</div>
-
-                <label class="sub-id-label">Sub IDs <small>(somente letras e números)</small></label>
+                <label class="sub-id-label">Sub IDs <small>(somente letras e números — opcional)</small></label>
                 <div class="sub-id-grid">
-                  <input type="text" id="sub-id-1-imagem" placeholder="Sub ID 1" maxlength="100" pattern="[a-zA-Z0-9]*" />
-                  <input type="text" id="sub-id-2-imagem" placeholder="Sub ID 2" maxlength="100" pattern="[a-zA-Z0-9]*" />
-                  <input type="text" id="sub-id-3-imagem" placeholder="Sub ID 3" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-1-imagem" placeholder="Sub ID 1 (ex: nomeDaCampanha)" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-2-imagem" placeholder="Sub ID 2 (ex: origemDoTrafego)" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-3-imagem" placeholder="Sub ID 3 (ex: tipoDeConteudo)" maxlength="100" pattern="[a-zA-Z0-9]*" />
                   <input type="text" id="sub-id-4-imagem" placeholder="Sub ID 4" maxlength="100" pattern="[a-zA-Z0-9]*" />
                   <input type="text" id="sub-id-5-imagem" placeholder="Sub ID 5" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                </div>
+
+                <button type="button" class="convert-btn convert-btn-full" id="convert-btn-imagem">🔗 Converter Link Shopee</button>
+                <div class="convert-status" id="convert-status-imagem">Preencha os Sub IDs (se quiser) e clique em Converter</div>
+                <div class="shopee-convert-row" id="converted-row-imagem" style="display:none">
+                  <input type="url" id="converted-link-imagem" readonly placeholder="Link convertido aparecerá aqui..." />
                 </div>
               </div>
             </div>
@@ -759,12 +769,15 @@
       const input = document.getElementById('converted-link-' + which);
       const status = document.getElementById('convert-status-' + which);
       const btn = document.getElementById('convert-btn-' + which);
+      const row = document.getElementById('converted-row-' + which);
       input.value = '';
+      row.style.display = 'none';
       status.className = 'convert-status';
-      status.textContent = 'Cole a URL do produto e clique Converter';
+      status.textContent = 'Preencha os Sub IDs (se quiser) e clique em Converter';
       btn.disabled = false;
       btn.classList.remove('loading');
-      btn.textContent = 'Converter';
+      btn.textContent = '🔗 Converter Link Shopee';
+      btn.style.display = '';
       for (let i = 1; i <= 5; i++) {
         document.getElementById('sub-id-' + i + '-' + which).value = '';
       }
@@ -794,6 +807,7 @@
       btn.disabled = true;
       btn.classList.add('loading');
       btn.textContent = 'Convertendo...';
+      document.getElementById('converted-row-' + which).style.display = 'none';
       status.className = 'convert-status';
       status.textContent = 'Chamando API Shopee...';
 
@@ -809,15 +823,16 @@
         convertedInput.value = data.short_link;
         if (which === 'agente') convertedLinkAgente = data.short_link;
         else convertedLinkImagem = data.short_link;
+        document.getElementById('converted-row-' + which).style.display = '';
         status.className = 'convert-status success';
         status.textContent = '✓ Link convertido com sucesso!';
-        btn.textContent = '✓ Convertido';
+        btn.style.display = 'none';
       } catch (err) {
         status.className = 'convert-status error';
         status.textContent = '✕ ' + (err.message || 'Erro na conversão');
         btn.disabled = false;
         btn.classList.remove('loading');
-        btn.textContent = 'Converter';
+        btn.textContent = '🔗 Converter Link Shopee';
       }
     }
 
