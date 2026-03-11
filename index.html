@@ -358,6 +358,77 @@
     .toast-close:hover { color: var(--text); }
 
     footer { text-align: center; margin-top: 20px; color: #3d444d; font-size: 0.75rem; }
+
+    /* ── Shopee section ── */
+    .shopee-section {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      animation: fadeIn .25s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .shopee-convert-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .shopee-convert-row input[type="url"] {
+      flex: 1;
+      background: rgba(0,229,160,.04);
+      cursor: default;
+    }
+    .convert-btn {
+      padding: 10px 16px;
+      background: var(--accent2);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .15s, background .15s;
+    }
+    .convert-btn:hover:not(:disabled) { opacity: .85; }
+    .convert-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .convert-btn.loading { background: var(--muted); }
+    .convert-status {
+      display: flex; align-items: center; gap: 7px;
+      margin-top: 6px; font-size: 0.8rem; color: var(--muted);
+      min-height: 18px;
+    }
+    .convert-status.success { color: var(--success); }
+    .convert-status.error { color: var(--error); }
+    .sub-id-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin: 14px 0 8px;
+    }
+    .sub-id-label small { font-weight: 400; }
+    .sub-id-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .sub-id-grid input[type="text"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 0.8125rem;
+      padding: 8px 12px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .sub-id-grid input[type="text"]:focus {
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+    }
+    .sub-id-grid input[type="text"]::placeholder { color: #3d444d; }
+    .sub-id-grid input:last-child:nth-child(odd) { grid-column: 1 / -1; }
   </style>
 </head>
 <body>
@@ -408,6 +479,24 @@
                 <span class="plat-dot"></span>
                 <span id="plat-text-agente">Cole o link para detectar a plataforma</span>
               </div>
+
+              <!-- Shopee section (hidden by default) -->
+              <div id="shopee-section-agente" class="shopee-section" style="display:none">
+                <div class="shopee-convert-row">
+                  <input type="url" id="converted-link-agente" readonly placeholder="Clique em Converter..." />
+                  <button type="button" class="convert-btn" id="convert-btn-agente">Converter</button>
+                </div>
+                <div class="convert-status" id="convert-status-agente">Cole a URL do produto e clique Converter</div>
+
+                <label class="sub-id-label">Sub IDs <small>(somente letras e números)</small></label>
+                <div class="sub-id-grid">
+                  <input type="text" id="sub-id-1-agente" placeholder="Sub ID 1" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-2-agente" placeholder="Sub ID 2" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-3-agente" placeholder="Sub ID 3" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-4-agente" placeholder="Sub ID 4" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-5-agente" placeholder="Sub ID 5" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -435,6 +524,24 @@
               <div class="plat-badge" id="plat-badge-imagem">
                 <span class="plat-dot"></span>
                 <span id="plat-text-imagem">Cole o link para detectar a plataforma</span>
+              </div>
+
+              <!-- Shopee section (hidden by default) -->
+              <div id="shopee-section-imagem" class="shopee-section" style="display:none">
+                <div class="shopee-convert-row">
+                  <input type="url" id="converted-link-imagem" readonly placeholder="Clique em Converter..." />
+                  <button type="button" class="convert-btn" id="convert-btn-imagem">Converter</button>
+                </div>
+                <div class="convert-status" id="convert-status-imagem">Cole a URL do produto e clique Converter</div>
+
+                <label class="sub-id-label">Sub IDs <small>(somente letras e números)</small></label>
+                <div class="sub-id-grid">
+                  <input type="text" id="sub-id-1-imagem" placeholder="Sub ID 1" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-2-imagem" placeholder="Sub ID 2" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-3-imagem" placeholder="Sub ID 3" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-4-imagem" placeholder="Sub ID 4" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                  <input type="text" id="sub-id-5-imagem" placeholder="Sub ID 5" maxlength="100" pattern="[a-zA-Z0-9]*" />
+                </div>
               </div>
             </div>
           </div>
@@ -504,8 +611,9 @@
   </div>
 
   <script>
-    const WEBHOOK_AGENTE = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-api';
-    const WEBHOOK_IMAGEM = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-imagem';
+    const WEBHOOK_AGENTE  = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-api';
+    const WEBHOOK_IMAGEM  = 'https://n8n-n8n.xktssy.easypanel.host/webhook/oferta-geek-imagem';
+    const WEBHOOK_CONVERT = 'https://n8n-n8n.xktssy.easypanel.host/webhook/shopee-convert-link';
 
     /* ── Emoji picker ── */
     const EMOJIS = {
@@ -621,6 +729,8 @@
     const PLAT_NAMES = { ML: '✓ Mercado Livre detectado', Amazon: '✓ Amazon detectada', Shopee: '✓ Shopee detectada' };
     let detectedPlatAgente = null;
     let detectedPlatImagem = null;
+    let convertedLinkAgente = null;
+    let convertedLinkImagem = null;
 
     function updatePlatBadge(url, badgeId, textId, which) {
       const plat = detectPlatform(url);
@@ -629,10 +739,103 @@
       const badge = document.getElementById(badgeId);
       const text  = document.getElementById(textId);
       badge.className = 'plat-badge';
-      if (!url) { text.textContent = 'Cole o link para detectar a plataforma'; return; }
-      if (plat) { badge.classList.add('detected'); text.textContent = PLAT_NAMES[plat]; }
-      else       { badge.classList.add('unknown');  text.textContent = '⚠ Plataforma não reconhecida — verifique o link'; }
+      if (!url) { text.textContent = 'Cole o link para detectar a plataforma'; }
+      else if (plat) { badge.classList.add('detected'); text.textContent = PLAT_NAMES[plat]; }
+      else { badge.classList.add('unknown');  text.textContent = '⚠ Plataforma não reconhecida — verifique o link'; }
+
+      // Show/hide Shopee section
+      const section = document.getElementById('shopee-section-' + which);
+      if (plat === 'Shopee') {
+        section.style.display = '';
+      } else {
+        section.style.display = 'none';
+        clearConvertedLink(which);
+      }
     }
+
+    function clearConvertedLink(which) {
+      if (which === 'agente') convertedLinkAgente = null;
+      else convertedLinkImagem = null;
+      const input = document.getElementById('converted-link-' + which);
+      const status = document.getElementById('convert-status-' + which);
+      const btn = document.getElementById('convert-btn-' + which);
+      input.value = '';
+      status.className = 'convert-status';
+      status.textContent = 'Cole a URL do produto e clique Converter';
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      btn.textContent = 'Converter';
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById('sub-id-' + i + '-' + which).value = '';
+      }
+    }
+
+    async function convertShopeeLink(which) {
+      const linkInput = document.getElementById('link-' + which);
+      const url = linkInput.value.trim();
+      const btn = document.getElementById('convert-btn-' + which);
+      const convertedInput = document.getElementById('converted-link-' + which);
+      const status = document.getElementById('convert-status-' + which);
+
+      if (!url) { status.className = 'convert-status error'; status.textContent = 'Cole a URL primeiro'; return; }
+
+      // Collect and validate sub_ids (only alphanumeric allowed by Shopee API)
+      const subIds = [];
+      for (let i = 1; i <= 5; i++) {
+        const v = document.getElementById('sub-id-' + i + '-' + which).value.trim();
+        if (v && !/^[a-zA-Z0-9]+$/.test(v)) {
+          status.className = 'convert-status error';
+          status.textContent = 'Sub ID ' + i + ': somente letras e números (sem espaço, _, -)';
+          return;
+        }
+        subIds.push(v);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Convertendo...';
+      status.className = 'convert-status';
+      status.textContent = 'Chamando API Shopee...';
+
+      try {
+        const res = await fetch(WEBHOOK_CONVERT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, sub_ids: subIds })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data.message || 'Erro na conversão');
+
+        convertedInput.value = data.short_link;
+        if (which === 'agente') convertedLinkAgente = data.short_link;
+        else convertedLinkImagem = data.short_link;
+        status.className = 'convert-status success';
+        status.textContent = '✓ Link convertido com sucesso!';
+        btn.textContent = '✓ Convertido';
+      } catch (err) {
+        status.className = 'convert-status error';
+        status.textContent = '✕ ' + (err.message || 'Erro na conversão');
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Converter';
+      }
+    }
+
+    // Wire convert buttons
+    document.getElementById('convert-btn-agente').addEventListener('click', () => convertShopeeLink('agente'));
+    document.getElementById('convert-btn-imagem').addEventListener('click', () => convertShopeeLink('imagem'));
+
+    // If URL changes after conversion, clear converted link
+    function hookUrlChangeReset(inputId, which) {
+      const el = document.getElementById(inputId);
+      el.addEventListener('input', () => {
+        if ((which === 'agente' && convertedLinkAgente) || (which === 'imagem' && convertedLinkImagem)) {
+          clearConvertedLink(which);
+        }
+      });
+    }
+    hookUrlChangeReset('link-agente', 'agente');
+    hookUrlChangeReset('link-imagem', 'imagem');
 
     function hookPlatBadge(inputId, badgeId, textId, which) {
       const el = document.getElementById(inputId);
@@ -758,12 +961,24 @@
         if (!link) return showError('Informe o link do afiliado.');
         if (!detectedPlatAgente) return showError('Plataforma não reconhecida. Verifique o link.');
 
+        // Shopee: require converted link
+        let finalLink = link;
+        const payload = { link_afiliado: link, plataforma: detectedPlatAgente, canal, extra_texto: extra, prioridade: isPrio ? 'SIM' : '' };
+        if (detectedPlatAgente === 'Shopee') {
+          if (!convertedLinkAgente) return showError('Converta o link Shopee antes de adicionar.');
+          finalLink = convertedLinkAgente;
+          payload.link_afiliado = finalLink;
+          for (let i = 1; i <= 5; i++) {
+            payload['sub_id_' + i] = document.getElementById('sub-id-' + i + '-agente').value.trim();
+          }
+        }
+
         setLoading(true);
         try {
           const res = await fetch(WEBHOOK_AGENTE, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ link_afiliado: link, plataforma: detectedPlatAgente, canal, extra_texto: extra, prioridade: isPrio ? 'SIM' : '' })
+            body: JSON.stringify(payload)
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
@@ -782,20 +997,32 @@
         if (!link) return showError('Informe o link do afiliado.');
         if (!detectedPlatImagem) return showError('Plataforma não reconhecida. Verifique o link.');
 
+        // Shopee: require converted link
+        let finalLinkImg = link;
+        const imgPayload = {
+          image_base64: imageBase64,
+          image_media_type: imageMediaType,
+          link_afiliado: link,
+          plataforma: detectedPlatImagem,
+          canal,
+          extra_texto: extra,
+          prioridade: isPrio ? 'SIM' : ''
+        };
+        if (detectedPlatImagem === 'Shopee') {
+          if (!convertedLinkImagem) return showError('Converta o link Shopee antes de adicionar.');
+          finalLinkImg = convertedLinkImagem;
+          imgPayload.link_afiliado = finalLinkImg;
+          for (let i = 1; i <= 5; i++) {
+            imgPayload['sub_id_' + i] = document.getElementById('sub-id-' + i + '-imagem').value.trim();
+          }
+        }
+
         setLoading(true, 'Analisando print com IA...');
         try {
           const res = await fetch(WEBHOOK_IMAGEM, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              image_base64: imageBase64,
-              image_media_type: imageMediaType,
-              link_afiliado: link,
-              plataforma: detectedPlatImagem,
-              canal,
-              extra_texto: extra,
-              prioridade: isPrio ? 'SIM' : ''
-            })
+            body: JSON.stringify(imgPayload)
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
@@ -815,9 +1042,13 @@
       processingMsg.classList.remove('show');
       setLoading(false);
       detectedPlatAgente = null; detectedPlatImagem = null;
+      convertedLinkAgente = null; convertedLinkImagem = null;
       updatePlatBadge('', 'plat-badge-agente', 'plat-text-agente', 'agente');
       updatePlatBadge('', 'plat-badge-imagem', 'plat-text-imagem', 'imagem');
       clearImage({ stopPropagation: () => {} });
+      // Hide Shopee sections
+      document.getElementById('shopee-section-agente').style.display = 'none';
+      document.getElementById('shopee-section-imagem').style.display = 'none';
     }
   </script>
 </body>
