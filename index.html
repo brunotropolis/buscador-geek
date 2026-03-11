@@ -767,9 +767,10 @@
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
+          const platCapturada = detectedPlatAgente;
           setLoading(false);
           resetForm();
-          showToast(isPrio, detectedPlatAgente, 'agente');
+          showToast(isPrio, platCapturada, 'agente');
         } catch (err) {
           showError(err.message || 'Erro de conexão. Tente novamente.');
         }
@@ -798,9 +799,10 @@
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok || !data.ok) throw new Error(data.message || `Erro ${res.status}`);
+          const platCapturada = detectedPlatImagem;
           setLoading(false);
           resetForm();
-          showToast(isPrio, detectedPlatImagem, 'imagem');
+          showToast(isPrio, platCapturada, 'imagem');
         } catch (err) {
           showError(err.message || 'Erro de conexão. Tente novamente.');
         }
