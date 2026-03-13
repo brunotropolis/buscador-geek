@@ -750,7 +750,20 @@
       const text  = document.getElementById(textId);
       badge.className = 'plat-badge';
       if (!url) { text.textContent = 'Cole o link para detectar a plataforma'; }
-      else if (plat) { badge.classList.add('detected'); text.textContent = PLAT_NAMES[plat]; }
+      else if (plat) {
+        badge.classList.add('detected');
+        text.textContent = PLAT_NAMES[plat];
+        // Warn if ML link is not shortened
+        if (plat === 'ML' && !url.toLowerCase().includes('meli.la')) {
+          badge.className = 'plat-badge unknown';
+          text.textContent = '⚠ Link ML não encurtado — use o link meli.la do painel de afiliados';
+        }
+        // Warn if Amazon link is not shortened
+        if (plat === 'Amazon' && !url.toLowerCase().includes('amzn.to') && !url.toLowerCase().includes('a.co/')) {
+          badge.className = 'plat-badge unknown';
+          text.textContent = '⚠ Link Amazon não encurtado — use o link amzn.to do painel de afiliados';
+        }
+      }
       else { badge.classList.add('unknown');  text.textContent = '⚠ Plataforma não reconhecida — verifique o link'; }
 
       // Show/hide Shopee section
